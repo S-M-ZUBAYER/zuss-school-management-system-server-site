@@ -19,6 +19,8 @@ const classesRoutes = require('./routes/Classes');
 const attendanceRoutes = require('./routes/attendences');
 const noticeRoutes = require('./routes/notices');
 const profileRoutes = require('./routes/profiles');
+const staffRoutes = require('./routes/Staffs');
+const studentRoutes = require('./routes/Students');
 
 
 
@@ -48,6 +50,8 @@ app.use('/api/classes', classesRoutes);
 app.use('/api/attendances', attendanceRoutes);
 app.use('/api/notices', noticeRoutes);
 app.use('/api/profiles', profileRoutes);
+app.use('/api/staffs', staffRoutes);
+app.use('/api/students', studentRoutes);
 
 // app.get('/user', (req, res) => {
 //     res.send({ message: "Hi affif vi" })
