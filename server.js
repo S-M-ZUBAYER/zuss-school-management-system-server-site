@@ -21,6 +21,7 @@ const noticeRoutes = require('./routes/notices');
 const profileRoutes = require('./routes/profiles');
 const staffRoutes = require('./routes/Staffs');
 const studentRoutes = require('./routes/Students');
+const calendarRoutes = require('./routes/calenders')
 
 
 
@@ -52,6 +53,7 @@ app.use('/api/notices', noticeRoutes);
 app.use('/api/profiles', profileRoutes);
 app.use('/api/staffs', staffRoutes);
 app.use('/api/students', studentRoutes);
+app.use('/api/calendar', calendarRoutes);
 
 // app.get('/user', (req, res) => {
 //     res.send({ message: "Hi affif vi" })

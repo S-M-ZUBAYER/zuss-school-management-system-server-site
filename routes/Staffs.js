@@ -25,8 +25,8 @@ const verifyToken = (req, res, next) => {
 
 // Add new staff
 router.post('/', (req, res) => {
-    const { name, schoolName, schoolCode, designation, phone, email, address, about } = req.body;
-    const staff = new Staff({ name, schoolName, schoolCode, designation, phone, email, address, about });
+    const { name, schoolName, schoolCode, designation, phone, email, bloodGroup, address, about } = req.body;
+    const staff = new Staff({ name, schoolName, schoolCode, designation, phone, email, bloodGroup, address, about });
     console.log(staff)
     staff.save()
         .then(() => {
@@ -49,6 +49,47 @@ router.patch('/:email', (req, res) => {
         .then((staff) => {
             if (!staff) {
                 return res.status(404).json({ error: 'staff not found' });
+            }
+
+            // Update the staff fields if provided
+            if (name) staff.name = name;
+            if (schoolName) staff.schoolName = schoolName;
+            if (schoolCode) staff.schoolCode = schoolCode;
+            if (designation) staff.designation = designation;
+            if (phone) staff.phone = phone;
+            if (email) staff.email = email;
+            if (address) staff.address = address;
+            if (about) staff.about = about;
+
+            // Save the updated staff
+            staff.save()
+                .then((updatedStaff) => {
+                    res.json(updatedStaff); // Respond with the updated staff
+                })
+                .catch((error) => {
+                    console.error('Error updating staff:', error);
+                    res.status(500).json({ error: 'Internal server error' });
+                });
+        })
+        .catch((error) => {
+            console.error('Error finding staff:', error);
+            res.status(500).json({ error: 'Internal server error' });
+        });
+});
+
+
+
+
+// Update a staff by ID
+router.put('/:id', (req, res) => {
+    const { name, schoolName, schoolCode, designation, phone, email, address, about } = req.body;
+    const { id } = req.params;
+
+    // Find the staff by ID
+    Staff.findById(id)
+        .then((staff) => {
+            if (!staff) {
+                return res.status(404).json({ error: 'Staff not found' });
             }
 
             // Update the staff fields if provided
@@ -109,7 +150,24 @@ router.get('/', (req, res) => {
 });
 
 
+// Delete a staff by ID
+router.delete('/:id', (req, res) => {
+    const { id } = req.params;
 
+    // Find the staff by ID and delete it
+    Staff.findByIdAndDelete(id)
+        .then((staff) => {
+            if (!staff) {
+                return res.status(404).json({ error: 'Staff not found' });
+            }
+
+            res.json({ message: 'Staff deleted successfully' });
+        })
+        .catch((error) => {
+            console.error('Error deleting staff:', error);
+            res.status(500).json({ error: 'Internal server error' });
+        });
+});
 
 
 

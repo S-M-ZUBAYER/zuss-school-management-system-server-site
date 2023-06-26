@@ -45,24 +45,24 @@ router.patch('/:email', (req, res) => {
     const { email: staffEmail } = req.params;
 
     // Find the staff by email address
-    Staff.findOne({ email: staffEmail })
+    Student.findOne({ email: staffEmail })
         .then((staff) => {
             if (!staff) {
                 return res.status(404).json({ error: 'staff not found' });
             }
 
             // Update the staff fields if provided
-            if (name) staff.name = name;
-            if (schoolName) staff.schoolName = schoolName;
-            if (schoolCode) staff.schoolCode = schoolCode;
-            if (designation) staff.designation = designation;
-            if (phone) staff.phone = phone;
-            if (email) staff.email = email;
-            if (address) staff.address = address;
-            if (about) staff.about = about;
+            if (name) Student.name = name;
+            if (schoolName) Student.schoolName = schoolName;
+            if (schoolCode) Student.schoolCode = schoolCode;
+            if (designation) Student.designation = designation;
+            if (phone) Student.phone = phone;
+            if (email) Student.email = email;
+            if (address) Student.address = address;
+            if (about) Student.about = about;
 
             // Save the updated staff
-            staff.save()
+            Student.save()
                 .then((updatedStaff) => {
                     res.json(updatedStaff); // Respond with the updated staff
                 })
@@ -81,9 +81,9 @@ router.patch('/:email', (req, res) => {
 // Get all school
 // router.get('/', verifyToken, (req, res) => {
 router.get('/', (req, res) => {
-    Staff.find()
-        .then((staffs) => {
-            res.json(staffs);
+    Student.find()
+        .then((students) => {
+            res.json(students);
         })
         .catch((error) => {
             res.status(500).json({ error: 'An error occurred' });
@@ -91,11 +91,30 @@ router.get('/', (req, res) => {
 });
 
 
+// Get all school
+// router.get('/', verifyToken, (req, res) => {
+router.get('/:id', (req, res) => {
+    const studentId = req.params.id;
+
+    Student.findById(studentId)
+        .then((student) => {
+            if (!student) {
+                return res.status(404).json({ error: 'Student not found' });
+            }
+            res.json(student);
+        })
+        .catch((error) => {
+            res.status(500).json({ error: 'An error occurred' });
+        });
+});
+
+
+
 //get the value according to the email address
 router.get('/', (req, res) => {
     const { email } = req.query;
 
-    Staff.findOne({ email })
+    Student.findOne({ email })
         .then((staff) => {
             if (!staff) {
                 return res.status(404).json({ error: 'staff not found' });
@@ -104,6 +123,70 @@ router.get('/', (req, res) => {
         })
         .catch((error) => {
             console.error('Error fetching staff data:', error);
+            res.status(500).json({ error: 'Internal server error' });
+        });
+});
+
+
+
+// Update a staff by ID
+router.put('/:id', (req, res) => {
+    const { name, schoolName, schoolCode, className, section, shift, fatherName, motherName, designation, phone, email, address } = req.body;
+    const { id } = req.params;
+
+    // Find the staff by ID
+    Student.findById(id)
+        .then((student) => {
+            if (!student) {
+                return res.status(404).json({ error: 'Student not found' });
+            }
+
+            // Update the staff fields if provided
+            if (name) student.name = name;
+            if (schoolName) student.schoolName = schoolName;
+            if (schoolCode) student.schoolCode = schoolCode;
+            if (className) student.className = className;
+            if (section) student.section = section;
+            if (shift) student.shift = shift;
+            if (fatherName) student.fatherName = fatherName;
+            if (motherName) student.motherName = motherName;
+            if (designation) student.designation = designation;
+            if (phone) student.phone = phone;
+            if (email) student.email = email;
+            if (address) student.address = address;
+            // Save the updated staff
+            student.save()
+                .then((updatedStudent) => {
+                    res.json(updatedStudent); // Respond with the updated staff
+                })
+                .catch((error) => {
+                    console.error('Error updating student:', error);
+                    res.status(500).json({ error: 'Internal server error' });
+                });
+        })
+        .catch((error) => {
+            console.error('Error finding student:', error);
+            res.status(500).json({ error: 'Internal server error' });
+        });
+});
+
+
+
+// Delete a student by ID
+router.delete('/:id', (req, res) => {
+    const { id } = req.params;
+
+    // Find the staff by ID and delete it
+    Student.findByIdAndDelete(id)
+        .then((student) => {
+            if (!student) {
+                return res.status(404).json({ error: 'student not found' });
+            }
+
+            res.json({ message: 'student deleted successfully' });
+        })
+        .catch((error) => {
+            console.error('Error deleting student:', error);
             res.status(500).json({ error: 'Internal server error' });
         });
 });

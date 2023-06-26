@@ -7,6 +7,7 @@ const staffSchema = new mongoose.Schema({
     designation: String,
     phone: String,
     email: String,
+    bloodGroup: String,
     address: String,
     about: String
 });
