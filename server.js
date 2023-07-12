@@ -55,9 +55,9 @@ app.use('/api/staffs', staffRoutes);
 app.use('/api/students', studentRoutes);
 app.use('/api/calendar', calendarRoutes);
 
-// app.get('/user', (req, res) => {
-//     res.send({ message: "Hi affif vi" })
-// })
+app.get('/', (req, res) => {
+    res.send({ message: "Welcome to Zuss school management system server site" })
+})
 
 
 // Start the server
