@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Staff = require('../models/staff');
 const jwt = require('jsonwebtoken');
+const Staffs = require('../models/staff');
 
 // Middleware to verify JWT token
 const verifyToken = (req, res, next) => {
@@ -25,8 +26,8 @@ const verifyToken = (req, res, next) => {
 
 // Add new staff
 router.post('/', (req, res) => {
-    const { name, schoolName, schoolCode, designation, phone, email, bloodGroup, address, about } = req.body;
-    const staff = new Staff({ name, schoolName, schoolCode, designation, phone, email, bloodGroup, address, about });
+    const { teacherId, name, schoolName, schoolCode, designation, phone, email, image, bloodGroup, address, about } = req.body;
+    const staff = new Staff({ teacherId, name, schoolName, schoolCode, designation, phone, email, image, bloodGroup, address, about });
     console.log(staff)
     staff.save()
         .then(() => {
@@ -119,18 +120,34 @@ router.put('/:id', (req, res) => {
 });
 
 
-// Get all school
-// router.get('/', verifyToken, (req, res) => {
+// // Get all school
+// // router.get('/', verifyToken, (req, res) => {
+// router.get('/', (req, res) => {
+//     Staff.find()
+//         .then((staffs) => {
+//             res.json(staffs);
+//         })
+//         .catch((error) => {
+//             res.status(500).json({ error: 'An error occurred' });
+//         });
+// });
+
+
+// Define the route to fetch notice data by school code
 router.get('/', (req, res) => {
-    Staff.find()
+    const { schoolCode } = req.query;
+
+    // Use the notice model to find the notices by school code
+    Staffs.find({ schoolCode })
         .then((staffs) => {
             res.json(staffs);
+            console.log(staffs)
         })
         .catch((error) => {
-            res.status(500).json({ error: 'An error occurred' });
+            console.error('Error fetching staffs data:', error);
+            res.status(500).json({ error: 'Internal server error' });
         });
 });
-
 
 //get the value according to the email address
 router.get('/', (req, res) => {
