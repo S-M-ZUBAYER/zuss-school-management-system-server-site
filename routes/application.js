@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Student = require('../models/student');
 const jwt = require('jsonwebtoken');
+const Applications = require('../models/application');
 
 // Middleware to verify JWT token
 const verifyToken = (req, res, next) => {
@@ -25,12 +26,12 @@ const verifyToken = (req, res, next) => {
 
 // Add new staff
 router.post('/', (req, res) => {
-    const { name, designation, schoolName, schoolCode, className, gender, fatherName, motherName, phone, email, division, district, number, transactionId, agentName, amount, address } = req.body;
-    const student = new Student({ name, designation, schoolName, schoolCode, className, gender, fatherName, motherName, phone, email, division, district, number, transactionId, agentName, amount, address });
+    const { name, designation, schoolName, schoolCode, previousClass, averageMark, className, gender, fatherName, motherName, phone, email, division, district, number, transactionId, agentName, amount, extraInfo, address } = req.body;
+    const application = new Applications({ name, designation, schoolName, schoolCode, previousClass, averageMark, className, gender, fatherName, motherName, phone, email, division, district, number, transactionId, agentName, amount, extraInfo, address });
 
-    student.save()
+    application.save()
         .then(() => {
-            res.status(201).json(student);
+            res.status(201).json(application);
         })
         .catch((error) => {
             res.status(500).json({ error: 'An error occurred' });

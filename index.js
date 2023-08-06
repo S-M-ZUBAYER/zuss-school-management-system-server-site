@@ -25,6 +25,7 @@ const calendarRoutes = require('./routes/calenders');
 const schoolUsersRoutes = require('./routes/SchoolUsers')
 const schoolEventsRoutes = require('./routes/events')
 const schoolAdmissionRoutes = require('./routes/admission')
+const schoolApplicationRoutes = require('./routes/application')
 
 
 
@@ -60,6 +61,7 @@ app.use('/api/calendar', calendarRoutes);
 app.use('/api/schoolUser', schoolUsersRoutes);
 app.use('/api/schoolEvents', schoolEventsRoutes);
 app.use('/api/admissionInfo', schoolAdmissionRoutes);
+app.use('/api/application', schoolApplicationRoutes);
 
 app.get('/', (req, res) => {
     res.send({ message: "Welcome to Zuss school management system server site" })

@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const studentSchema = new mongoose.Schema({
+const applicationSchema = new mongoose.Schema({
     applicationId: String,
     name: String,
     schoolName: String,
@@ -8,12 +8,16 @@ const studentSchema = new mongoose.Schema({
     designation: String,
     phone: String,
     email: String,
+    previousClass: String,
+    averageMark: String,
+    className: String,
     className: String,
     section: String,
     shift: String,
     classRoll: String,
     fatherName: String,
     motherName: String,
+    extraInfo: String,
     address: String,
     image: String,
     gender: String,
@@ -26,6 +30,6 @@ const studentSchema = new mongoose.Schema({
 
 });
 
-const Students = mongoose.model('students', studentSchema);
+const Applications = mongoose.model('application', applicationSchema);
 
-module.exports = Students;
+module.exports = Applications;
