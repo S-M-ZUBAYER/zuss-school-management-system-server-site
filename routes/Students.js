@@ -25,8 +25,8 @@ const verifyToken = (req, res, next) => {
 
 // Add new staff
 router.post('/', (req, res) => {
-    const { name, designation, schoolName, schoolCode, className, gender, fatherName, motherName, phone, email, division, district, number, transactionId, agentName, amount, address } = req.body;
-    const student = new Student({ name, designation, schoolName, schoolCode, className, gender, fatherName, motherName, phone, email, division, district, number, transactionId, agentName, amount, address });
+    const { studentId, name, year, image, designation, schoolName, schoolCode, className, section, shift, classRoll, gender, fatherName, motherName, phone, email, division, district, address } = req.body;
+    const student = new Student({ studentId, name, year, image, designation, schoolName, schoolCode, className, section, shift, classRoll, gender, fatherName, motherName, phone, email, division, district, address });
 
     student.save()
         .then(() => {

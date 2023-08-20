@@ -1,8 +1,9 @@
 const mongoose = require('mongoose');
-
 const studentSchema = new mongoose.Schema({
-    applicationId: String,
+    studentId: String,
     name: String,
+    year: String,
+    image: String,
     schoolName: String,
     schoolCode: String,
     designation: String,
@@ -19,10 +20,8 @@ const studentSchema = new mongoose.Schema({
     gender: String,
     division: String,
     district: String,
-    number: String,
-    transactionId: String,
-    agentName: String,
-    amount: String
+    phone: String,
+    email: String
 
 });
 

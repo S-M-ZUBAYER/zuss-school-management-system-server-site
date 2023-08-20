@@ -26,8 +26,8 @@ const verifyToken = (req, res, next) => {
 
 // Add new staff
 router.post('/', (req, res) => {
-    const { name, designation, schoolName, schoolCode, previousClass, averageMark, className, gender, fatherName, motherName, phone, email, division, district, number, transactionId, agentName, amount, extraInfo, address } = req.body;
-    const application = new Applications({ name, designation, schoolName, schoolCode, previousClass, averageMark, className, gender, fatherName, motherName, phone, email, division, district, number, transactionId, agentName, amount, extraInfo, address });
+    const { applicationId, name, date, designation, schoolName, schoolCode, previousClass, averageMark, className, gender, fatherName, motherName, phone, email, division, district, image, accept, admitCard, waiting, number, transactionId, agentName, amount, extraInfo, address } = req.body;
+    const application = new Applications({ applicationId, name, date, designation, schoolName, schoolCode, previousClass, averageMark, className, gender, fatherName, motherName, phone, email, division, district, image, accept, admitCard, waiting, number, transactionId, agentName, amount, extraInfo, address });
 
     application.save()
         .then(() => {
@@ -81,52 +81,71 @@ router.patch('/:email', (req, res) => {
 
 // Get all school
 // router.get('/', verifyToken, (req, res) => {
-router.get('/', (req, res) => {
-    Student.find()
-        .then((students) => {
-            res.json(students);
-        })
-        .catch((error) => {
-            res.status(500).json({ error: 'An error occurred' });
-        });
-});
+// router.get('/', (req, res) => {
+//     Applications.find()
+//         .then((students) => {
+//             res.json(students);
+//         })
+//         .catch((error) => {
+//             res.status(500).json({ error: 'An error occurred' });
+//         });
+// });
 
 
-// Get all school
-// router.get('/', verifyToken, (req, res) => {
-router.get('/:id', (req, res) => {
-    const studentId = req.params.id;
+// // Get all school
+// // router.get('/', verifyToken, (req, res) => {
+// router.get('/:id', (req, res) => {
+//     const studentId = req.params.id;
 
-    Student.findById(studentId)
-        .then((student) => {
-            if (!student) {
-                return res.status(404).json({ error: 'Student not found' });
-            }
-            res.json(student);
-        })
-        .catch((error) => {
-            res.status(500).json({ error: 'An error occurred' });
-        });
-});
+//     Student.findById(studentId)
+//         .then((student) => {
+//             if (!student) {
+//                 return res.status(404).json({ error: 'Student not found' });
+//             }
+//             res.json(student);
+//         })
+//         .catch((error) => {
+//             res.status(500).json({ error: 'An error occurred' });
+//         });
+// });
 
 
 
 //get the value according to the email address
-router.get('/', (req, res) => {
-    const { email } = req.query;
-
-    Student.findOne({ email })
-        .then((staff) => {
-            if (!staff) {
-                return res.status(404).json({ error: 'staff not found' });
+router.get('/:schoolCode', (req, res) => {
+    const { schoolCode } = req.params; // Get schoolCode from route parameter
+    const { date } = req.query; // Get date from query parameter
+    console.log(date, req.query, "date");
+    Applications.find({ schoolCode, date }) // Use findOne to retrieve a single application
+        .then((application) => {
+            if (!application) {
+                return res.status(404).json({ error: 'Application not found' });
             }
-            res.json(staff);
+            res.json(application);
         })
         .catch((error) => {
-            console.error('Error fetching staff data:', error);
+            console.error('Error fetching application data:', error);
             res.status(500).json({ error: 'Internal server error' });
         });
 });
+
+//get the value according to the email address
+router.get('/details/:applicationId', (req, res) => {
+    const { applicationId } = req.params;
+    console.log(applicationId);
+    Applications.findOne({ applicationId }) // Use findOne to retrieve a single application
+        .then((application) => {
+            if (!application) {
+                return res.status(404).json({ error: 'Application not found' });
+            }
+            res.json(application);
+        })
+        .catch((error) => {
+            console.error('Error fetching application data:', error);
+            res.status(500).json({ error: 'Internal server error' });
+        });
+});
+
 
 
 

@@ -134,8 +134,8 @@ router.put('/:id', (req, res) => {
 
 
 // Define the route to fetch notice data by school code
-router.get('/', (req, res) => {
-    const { schoolCode } = req.query;
+router.get('/:schoolCode', (req, res) => {
+    const { schoolCode } = req.params;
 
     // Use the notice model to find the notices by school code
     Staffs.find({ schoolCode })
