@@ -78,15 +78,25 @@ router.patch('/:email', (req, res) => {
 });
 
 
-// Get all school
-// router.get('/', verifyToken, (req, res) => {
-router.get('/', (req, res) => {
-    Student.find()
+
+//get the value according to the email address
+router.get('/:schoolCode', (req, res) => {
+    const { schoolCode } = req.params; // Get schoolCode from route parameter
+    const { year } = req.query; // Get date from query parameter
+
+    Student.find({ schoolCode, year })
         .then((students) => {
+            if (students.length === 0) {
+                return res.status(404).json({ error: 'No students found' });
+            }
+
+            // If you expect only one student, you can access it with students[0]
+            // Otherwise, send the entire students array
             res.json(students);
         })
         .catch((error) => {
-            res.status(500).json({ error: 'An error occurred' });
+            console.error('Error fetching student data:', error);
+            res.status(500).json({ error: 'Internal server error' });
         });
 });
 
@@ -131,29 +141,21 @@ router.get('/', (req, res) => {
 
 // Update a staff by ID
 router.put('/:id', (req, res) => {
-    const { name, schoolName, schoolCode, className, section, shift, fatherName, motherName, designation, phone, email, address } = req.body;
+    const { admitCard } = req.body;
     const { id } = req.params;
-
-    // Find the staff by ID
+    console.log(admitCard, id)
     Student.findById(id)
         .then((student) => {
             if (!student) {
+                console.log("dont")
                 return res.status(404).json({ error: 'Student not found' });
             }
-
+            console.log(student)
             // Update the staff fields if provided
-            if (name) student.name = name;
-            if (schoolName) student.schoolName = schoolName;
-            if (schoolCode) student.schoolCode = schoolCode;
-            if (className) student.className = className;
-            if (section) student.section = section;
-            if (shift) student.shift = shift;
-            if (fatherName) student.fatherName = fatherName;
-            if (motherName) student.motherName = motherName;
-            if (designation) student.designation = designation;
-            if (phone) student.phone = phone;
-            if (email) student.email = email;
-            if (address) student.address = address;
+            if (admitCard) student.admitCard = admitCard;
+
+            console.log(student.admitCard)
+
             // Save the updated staff
             student.save()
                 .then((updatedStudent) => {

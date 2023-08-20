@@ -195,9 +195,9 @@ router.put('/:id', (req, res) => {
 // Delete a student by ID
 router.delete('/:id', (req, res) => {
     const { id } = req.params;
-
+    console.log(id, 'skfjldaksjfk')
     // Find the staff by ID and delete it
-    Student.findByIdAndDelete(id)
+    Applications.findByIdAndDelete(id)
         .then((student) => {
             if (!student) {
                 return res.status(404).json({ error: 'student not found' });
@@ -212,7 +212,37 @@ router.delete('/:id', (req, res) => {
 });
 
 
+router.put('/admitCard/:id', (req, res) => {
+    const { admitCard } = req.body;
+    const { id } = req.params;
+    console.log(admitCard, id)
+    Applications.findById(id)
+        .then((student) => {
+            if (!student) {
+                console.log("dont")
+                return res.status(404).json({ error: 'Student not found' });
+            }
+            console.log(student)
+            // Update the staff fields if provided
+            if (admitCard) student.admitCard = admitCard;
 
+            console.log(student.admitCard)
+
+            // Save the updated staff
+            student.save()
+                .then((updatedStudent) => {
+                    res.json(updatedStudent); // Respond with the updated staff
+                })
+                .catch((error) => {
+                    console.error('Error updating student:', error);
+                    res.status(500).json({ error: 'Internal server error' });
+                });
+        })
+        .catch((error) => {
+            console.error('Error finding student:', error);
+            res.status(500).json({ error: 'Internal server error' });
+        });
+});
 
 
 
