@@ -26,6 +26,7 @@ const schoolUsersRoutes = require('./routes/SchoolUsers')
 const schoolEventsRoutes = require('./routes/events')
 const schoolAdmissionRoutes = require('./routes/admission')
 const schoolApplicationRoutes = require('./routes/application')
+const staffSalaryRoutes = require('./routes/salary')
 
 
 
@@ -62,6 +63,7 @@ app.use('/api/schoolUser', schoolUsersRoutes);
 app.use('/api/schoolEvents', schoolEventsRoutes);
 app.use('/api/admissionInfo', schoolAdmissionRoutes);
 app.use('/api/application', schoolApplicationRoutes);
+app.use('/api/staffSalary', staffSalaryRoutes);
 
 app.get('/', (req, res) => {
     res.send({ message: "Welcome to Zuss school management system server site" })

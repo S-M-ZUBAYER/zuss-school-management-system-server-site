@@ -10,6 +10,8 @@ const staffSchema = new mongoose.Schema({
     email: String,
     image: String,
     bloodGroup: String,
+    district: String,
+    division: String,
     address: String,
     about: String
 });

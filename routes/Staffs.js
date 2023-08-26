@@ -26,8 +26,8 @@ const verifyToken = (req, res, next) => {
 
 // Add new staff
 router.post('/', (req, res) => {
-    const { teacherId, name, schoolName, schoolCode, designation, phone, email, image, bloodGroup, address, about } = req.body;
-    const staff = new Staff({ teacherId, name, schoolName, schoolCode, designation, phone, email, image, bloodGroup, address, about });
+    const { teacherId, name, schoolName, schoolCode, designation, phone, email, image, bloodGroup, district, division, address, about } = req.body;
+    const staff = new Staff({ teacherId, name, schoolName, schoolCode, designation, phone, email, image, bloodGroup, district, division, address, about });
     console.log(staff)
     staff.save()
         .then(() => {
@@ -59,6 +59,8 @@ router.patch('/:email', (req, res) => {
             if (designation) staff.designation = designation;
             if (phone) staff.phone = phone;
             if (email) staff.email = email;
+            if (district) staff.district = district;
+            if (division) staff.division = division;
             if (address) staff.address = address;
             if (about) staff.about = about;
 
@@ -100,6 +102,8 @@ router.put('/:id', (req, res) => {
             if (designation) staff.designation = designation;
             if (phone) staff.phone = phone;
             if (email) staff.email = email;
+            if (district) staff.district = district;
+            if (division) staff.division = division;
             if (address) staff.address = address;
             if (about) staff.about = about;
 
