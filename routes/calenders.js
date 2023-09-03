@@ -28,7 +28,6 @@ router.patch('/:id', async (req, res) => {
 
 router.patch('/', async (req, res) => {
     const { calendarImg, year, schoolName, currentSchoolCode, startMonth, endMonth, events } = req.body;
-    console.log(calendarImg, year, schoolName, currentSchoolCode, startMonth, endMonth, events);
 
     try {
         // Check if a calendar with the given school code already exists

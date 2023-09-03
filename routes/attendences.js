@@ -23,10 +23,8 @@ const verifyToken = (req, res, next) => {
 
 // Create a new Attendance
 router.post('/', (req, res) => {
-    console.log(req.body)
     const { name, schoolName, schoolCode, date, status } = req.body;
     const attendances = new Attendance({ name, schoolName, schoolCode, date, status });
-    console.log(attendances)
     attendances.save()
         .then(() => {
             res.status(201).json(attendances);

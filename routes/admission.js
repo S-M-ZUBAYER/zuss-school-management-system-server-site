@@ -45,9 +45,7 @@ router.patch('/update/:schoolCode', (req, res) => {
 
 router.post('/', (req, res) => {
     const { schoolName, schoolCode, admissionInfo } = req.body;
-    console.log(req.body)
     const admission = new Admission({ schoolName, schoolCode, admissionInfo });
-    console.log(admission)
     admission.save()
         .then(() => {
             res.status(201).json(admission);
@@ -77,13 +75,11 @@ router.get('/:schoolCode', (req, res) => {
 
 router.get('/', (req, res) => {
     const { schoolCode } = req.query;
-    console.log(schoolCode)
 
     // Use the notice model to find the notices by school code
     Admission.find({ schoolCode })
         .then((admission) => {
             res.json(admission);
-            console.log(admission)
         })
         .catch((error) => {
             console.error('Error fetching admission data:', error);

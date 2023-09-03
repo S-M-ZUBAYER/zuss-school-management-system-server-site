@@ -23,10 +23,10 @@ const verifyToken = (req, res, next) => {
 
 // Create a new school
 router.post('/', (req, res) => {
-    console.log(req.body)
+
     const { name, schoolEmail, schoolCode, schoolLocation, aboutSchool, schoolBannerImg, schoolBackgroundImg } = req.body;
     const school = new School({ name, schoolEmail, schoolCode, schoolLocation, aboutSchool, schoolBannerImg, schoolBackgroundImg });
-    console.log(school)
+
     school.save()
         .then(() => {
             res.status(201).json(school);

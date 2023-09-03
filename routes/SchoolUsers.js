@@ -24,10 +24,10 @@ const verifyToken = (req, res, next) => {
 
 // Create a new user
 router.post('/add', (req, res) => {
-    console.log(req.body);
+
     const { name, image, schoolName, schoolCode, email } = req.body;
     const users = new SchoolUsers({ name, image, schoolName, schoolCode, email });
-    console.log(users);
+
     users.save() // Call the save() method on the users object, not on the SchoolUsers model
         .then(() => {
             res.status(201).json(users);

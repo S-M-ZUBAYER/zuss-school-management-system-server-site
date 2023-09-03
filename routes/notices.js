@@ -23,10 +23,10 @@ const verifyToken = (req, res, next) => {
 
 // Create a new notice
 router.post('/', (req, res) => {
-    console.log(req.body)
+
     const { name, schoolName, schoolCode, heading, message, date, time } = req.body;
     const notice = new Notice({ name, schoolName, schoolCode, heading, message, date, time });
-    console.log(notice)
+
     notice.save()
         .then(() => {
             res.status(201).json(notice);
@@ -41,13 +41,12 @@ router.post('/', (req, res) => {
 // Define the route to fetch notice data by school code
 router.get('/', (req, res) => {
     const { schoolCode } = req.query;
-    console.log(schoolCode)
+
 
     // Use the notice model to find the notices by school code
     Notice.find({ schoolCode })
         .then((notices) => {
             res.json(notices);
-            console.log(notices)
         })
         .catch((error) => {
             console.error('Error fetching notice data:', error);
@@ -78,7 +77,6 @@ router.get('/:id', (req, res) => {
 router.get('/notice/:schoolCode', (req, res) => {
     const { schoolCode } = req.params; // Retrieve school code from URL parameter
 
-    console.log(schoolCode, "schoolCode");
 
     // Use the notice model to find the notice by school code
     Notice.find({ schoolCode }) // Use `find` instead of `findOne` to get all notices matching the school code

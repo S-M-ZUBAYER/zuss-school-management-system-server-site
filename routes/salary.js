@@ -66,6 +66,23 @@ router.get('/:schoolCode', (req, res) => {
         });
 });
 
+router.get('/staff/:email', (req, res) => {
+    const { email } = req.params;
+
+    Salary.findOne({
+        staffEmail: email
+    }) // Using findOne with the email as the query parameter
+        .then((salary) => {
+            if (!salary) {
+                return res.status(404).json({ error: "This user's salary information not found" });
+            }
+            res.json(salary);
+        })
+        .catch((error) => {
+            res.status(500).json({ error: 'An error occurred' });
+        });
+});
+
 // Update a class
 // router.put('/:id', verifyToken, (req, res) => {
 router.put('/:id', (req, res) => {

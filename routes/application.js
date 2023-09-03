@@ -39,6 +39,27 @@ router.post('/', (req, res) => {
 });
 
 
+router.put('/:applicationId', async (req, res) => {
+    const { applicationId } = req.params;
+
+    try {
+        const updatedApplication = await Applications.findOneAndUpdate(
+            { applicationId },
+            { accept: true },
+            { new: true }
+        );
+
+        if (!updatedApplication) {
+            return res.status(404).json({ error: 'Application not found' });
+        }
+
+        res.status(200).json(updatedApplication);
+    } catch (error) {
+        res.status(500).json({ error: 'An error occurred' });
+    }
+});
+
+
 
 // Update a staff by email address
 router.patch('/:email', (req, res) => {
@@ -115,13 +136,13 @@ router.patch('/:email', (req, res) => {
 router.get('/:schoolCode', (req, res) => {
     const { schoolCode } = req.params; // Get schoolCode from route parameter
     const { date } = req.query; // Get date from query parameter
-    console.log(date, req.query, "date");
-    Applications.find({ schoolCode, date }) // Use findOne to retrieve a single application
-        .then((application) => {
-            if (!application) {
-                return res.status(404).json({ error: 'Application not found' });
+
+    Applications.find({ schoolCode, date }) // Use find to retrieve applications with the given schoolCode and date
+        .then((applications) => {
+            if (!applications || applications.length === 0) {
+                return res.status(404).json({ error: 'Applications not found' });
             }
-            res.json(application);
+            res.json(applications);
         })
         .catch((error) => {
             console.error('Error fetching application data:', error);
@@ -129,10 +150,11 @@ router.get('/:schoolCode', (req, res) => {
         });
 });
 
+
+
 //get the value according to the email address
 router.get('/details/:applicationId', (req, res) => {
     const { applicationId } = req.params;
-    console.log(applicationId);
     Applications.findOne({ applicationId }) // Use findOne to retrieve a single application
         .then((application) => {
             if (!application) {
@@ -195,7 +217,6 @@ router.put('/:id', (req, res) => {
 // Delete a student by ID
 router.delete('/:id', (req, res) => {
     const { id } = req.params;
-    console.log(id, 'skfjldaksjfk')
     // Find the staff by ID and delete it
     Applications.findByIdAndDelete(id)
         .then((student) => {
@@ -215,18 +236,13 @@ router.delete('/:id', (req, res) => {
 router.put('/admitCard/:id', (req, res) => {
     const { admitCard } = req.body;
     const { id } = req.params;
-    console.log(admitCard, id)
     Applications.findById(id)
         .then((student) => {
             if (!student) {
-                console.log("dont")
                 return res.status(404).json({ error: 'Student not found' });
             }
-            console.log(student)
             // Update the staff fields if provided
             if (admitCard) student.admitCard = admitCard;
-
-            console.log(student.admitCard)
 
             // Save the updated staff
             student.save()

@@ -23,10 +23,10 @@ const verifyToken = (req, res, next) => {
 
 // Create a new class
 router.post('/', (req, res) => {
-    console.log(req.body)
+
     const { schoolName, schoolCode, classInfo } = req.body;
     const classes = new Class({ schoolName, schoolCode, classInfo });
-    console.log(classes, "classInfo")
+
     classes.save()
         .then(() => {
             res.status(201).json(classes);
@@ -52,7 +52,7 @@ router.get('/', (req, res) => {
 // router.get('/:id', verifyToken, (req, res) => {
 router.get('/:schoolCode', (req, res) => {
     const { schoolCode } = req.params;
-    console.log(schoolCode);
+
     Class.findOne({ schoolCode }) // Use findOne with the schoolCode as the query parameter
         .then((classes) => {
             if (!classes) {
