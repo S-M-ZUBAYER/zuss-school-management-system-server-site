@@ -5,6 +5,8 @@ const classRoutineSchema = new mongoose.Schema({
     schoolName: String,
     schoolCode: String,
     className: String,
+    sectionName: String,
+    shiftName: String,
     routine: Object, // Assuming you want to store the routine as an object
 });
 

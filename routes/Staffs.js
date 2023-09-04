@@ -28,7 +28,7 @@ const verifyToken = (req, res, next) => {
 router.post('/', (req, res) => {
     const { teacherId, name, schoolName, schoolCode, designation, phone, email, image, bloodGroup, district, division, address, about } = req.body;
     const staff = new Staff({ teacherId, name, schoolName, schoolCode, designation, phone, email, image, bloodGroup, district, division, address, about });
-    console.log(staff)
+
     staff.save()
         .then(() => {
             res.status(201).json(staff);
@@ -145,7 +145,7 @@ router.get('/:schoolCode', (req, res) => {
     Staffs.find({ schoolCode })
         .then((staffs) => {
             res.json(staffs);
-            console.log(staffs)
+
         })
         .catch((error) => {
             console.error('Error fetching staffs data:', error);
@@ -154,21 +154,20 @@ router.get('/:schoolCode', (req, res) => {
 });
 
 //get the value according to the email address
-router.get('/', (req, res) => {
-    const { email } = req.query;
+router.get('/:schoolCode/:email', (req, res) => {
+    const { schoolCode, email } = req.params;
 
-    Staff.findOne({ email })
-        .then((staff) => {
-            if (!staff) {
-                return res.status(404).json({ error: 'staff not found' });
-            }
-            res.json(staff);
+    // Use the staff model to find staff by school code and email
+    Staff.find({ schoolCode, email })
+        .then((staffs) => {
+            res.json(staffs);
         })
         .catch((error) => {
-            console.error('Error fetching staff data:', error);
+            console.error('Error fetching staffs data:', error);
             res.status(500).json({ error: 'Internal server error' });
         });
 });
+
 
 
 // Delete a staff by ID

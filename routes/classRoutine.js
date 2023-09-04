@@ -6,13 +6,15 @@ const ClassRoutine = require('../models/classRoutine');
 router.post('/add', async (req, res) => {
     console.log("click")
     try {
-        const { year, schoolName, schoolCode, className, routine } = req.body;
+        const { year, schoolName, schoolCode, className, sectionName, shiftName, routine } = req.body;
         console.log("click")
         const newClassRoutine = new ClassRoutine({
             year,
             schoolName,
             schoolCode,
             className,
+            sectionName,
+            shiftName,
             routine,
         });
 
