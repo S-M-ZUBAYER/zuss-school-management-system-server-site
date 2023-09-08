@@ -17,6 +17,7 @@ app.use(express.urlencoded({ extended: false }))
 const schoolRoutes = require('./routes/schools');
 const classesRoutes = require('./routes/Classes');
 const attendanceRoutes = require('./routes/attendences');
+const stdAttendanceRoutes = require('./routes/stdAttendance');
 const noticeRoutes = require('./routes/notices');
 const profileRoutes = require('./routes/profiles');
 const staffRoutes = require('./routes/Staffs');
@@ -55,6 +56,7 @@ app.post('/login', (req, res) => {
 app.use('/api/schools', schoolRoutes);
 app.use('/api/classes', classesRoutes);
 app.use('/api/attendances', attendanceRoutes);
+app.use('/api/stdAttendances', stdAttendanceRoutes);
 app.use('/api/notices', noticeRoutes);
 app.use('/api/profiles', profileRoutes);
 app.use('/api/staffs', staffRoutes);

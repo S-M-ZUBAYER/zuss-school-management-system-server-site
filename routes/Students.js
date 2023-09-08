@@ -119,6 +119,23 @@ router.get('/:schoolCode', (req, res) => {
         });
 });
 
+router.get('/details/:studentId', (req, res) => {
+    const { studentId } = req.params; // Get studentId from route parameter
+    const { schoolCode } = req.query; // Get schoolCode from query parameter
+    console.log(studentId, schoolCode)
+    Student.find({ studentId, schoolCode })
+        .then((students) => {
+            if (!students || students.length === 0) {
+                return res.status(404).json({ error: 'Students not found' });
+            }
+            res.json(students);
+        })
+        .catch((error) => {
+            console.error('Error fetching student data:', error);
+            res.status(500).json({ error: 'Internal server error' });
+        });
+});
+
 
 // Get all school
 // router.get('/', verifyToken, (req, res) => {

@@ -5,6 +5,7 @@ const attendanceSchema = new mongoose.Schema({
     schoolName: String,
     schoolCode: String,
     date: String,
+    phone: String,
     status: String,
 });
 
