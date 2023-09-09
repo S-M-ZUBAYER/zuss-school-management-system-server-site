@@ -97,6 +97,39 @@ router.patch('/:email', (req, res) => {
 //             res.status(500).json({ error: 'Internal server error' });
 //         });
 // });
+router.get('/student/:schoolCode', async (req, res) => {
+    const { schoolCode } = req.params; // Get schoolCode from route parameter
+    const { email, year } = req.query; // Get email and year from query parameters
+
+    try {
+        let query = { schoolCode };
+
+        if (email) {
+            // If email is provided, add it to the query
+            query.email = email;
+        }
+
+        if (year) {
+            // If year is provided, add it to the query
+            query.year = year;
+        }
+
+        // Here, you can use the query object to fetch the relevant student data
+        // For example, querying your database using Mongoose
+        const students = await Student.find(query);
+
+        if (!students || students.length === 0) {
+            return res.status(404).json({ error: 'Students not found' });
+        }
+
+        res.json(students);
+    } catch (error) {
+        console.error('Error fetching student data:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+
 
 router.get('/:schoolCode', (req, res) => {
     const { schoolCode } = req.params; // Get schoolCode from route parameter

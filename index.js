@@ -29,6 +29,8 @@ const schoolAdmissionRoutes = require('./routes/admission')
 const schoolApplicationRoutes = require('./routes/application')
 const staffSalaryRoutes = require('./routes/salary')
 const generateClassRoutineRoutes = require('./routes/classRoutine')
+const PaymentSystemRoutes = require('./routes/paymentSystem')
+const TermSubjectsRoutes = require('./routes/termSubject')
 
 
 
@@ -68,6 +70,8 @@ app.use('/api/admissionInfo', schoolAdmissionRoutes);
 app.use('/api/application', schoolApplicationRoutes);
 app.use('/api/staffSalary', staffSalaryRoutes);
 app.use('/api/classRoutine', generateClassRoutineRoutes);
+app.use('/api/stdPayment', PaymentSystemRoutes);
+app.use('/api/termSubject', TermSubjectsRoutes);
 
 app.get('/', (req, res) => {
     res.send({ message: "Welcome to Zuss school management system server site" })
