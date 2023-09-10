@@ -113,15 +113,16 @@ router.get('/student/:schoolCode', async (req, res) => {
             // If year is provided, add it to the query
             query.year = year;
         }
+        console.log(email, year, schoolCode)
 
         // Here, you can use the query object to fetch the relevant student data
         // For example, querying your database using Mongoose
         const students = await Student.find(query);
 
+        console.log(students)
         if (!students || students.length === 0) {
             return res.status(404).json({ error: 'Students not found' });
         }
-
         res.json(students);
     } catch (error) {
         console.error('Error fetching student data:', error);

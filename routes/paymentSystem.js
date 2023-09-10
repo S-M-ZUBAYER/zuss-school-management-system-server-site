@@ -38,6 +38,8 @@ router.get('/:schoolCode', (req, res) => {
         });
 });
 
+
+
 // Get all Attendance
 // router.get('/', verifyToken, (req, res) => {
 router.get('/', (req, res) => {
