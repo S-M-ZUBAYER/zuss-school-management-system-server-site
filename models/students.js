@@ -7,24 +7,20 @@ const studentSchema = new mongoose.Schema({
     schoolName: String,
     schoolCode: String,
     designation: String,
-    phone: String,
-    email: String,
     className: String,
     section: String,
     shift: String,
+    gender: String,
     classRoll: String,
     fatherName: String,
     motherName: String,
-    address: String,
-    image: String,
-    gender: String,
+    phone: String,
+    email: String,
     division: String,
     district: String,
-    phone: String,
-    email: String
-
+    address: String,
 });
 
-const Students = mongoose.model('students', studentSchema);
+const Students = mongoose.model('student', studentSchema);
 
 module.exports = Students;

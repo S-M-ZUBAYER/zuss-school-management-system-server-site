@@ -1,37 +1,19 @@
 const express = require('express');
 const router = express.Router();
-const Student = require('../models/student');
+const Students = require('../models/students');
 const jwt = require('jsonwebtoken');
-const Students = require('../models/student');
 
-// Middleware to verify JWT token
-const verifyToken = (req, res, next) => {
-    const token = req.headers['authorization'];
-
-    if (!token) {
-        return res.status(401).json({ error: 'Unauthorized' });
-    }
-
-    jwt.verify(token, 'secret_key', (err, decoded) => {
-        if (err) {
-            return res.status(401).json({ error: 'Unauthorized' });
-        }
-        // req.userId = decoded.id;
-        req.schoolId = decoded.id;
-        next();
-    });
-};
 
 
 
 // Add new staff
-router.post('/', (req, res) => {
+router.post('/add', (req, res) => {
     const { studentId, name, year, image, designation, schoolName, schoolCode, className, section, shift, classRoll, gender, fatherName, motherName, phone, email, division, district, address } = req.body;
-    const student = new Student({ studentId, name, year, image, designation, schoolName, schoolCode, className, section, shift, classRoll, gender, fatherName, motherName, phone, email, division, district, address });
-
+    const student = new Students({ studentId, name, year, image, designation, schoolName, schoolCode, className, section, shift, classRoll, gender, fatherName, motherName, phone, email, division, district, address });
     student.save()
         .then(() => {
             res.status(201).json(student);
+            console.log(student)
         })
         .catch((error) => {
             res.status(500).json({ error: 'An error occurred' });
@@ -42,61 +24,45 @@ router.post('/', (req, res) => {
 
 // Update a staff by email address
 router.patch('/:email', (req, res) => {
-    const { name, schoolName, schoolCode, designation, phone, email, address, about } = req.body;
-    const { email: staffEmail } = req.params;
+    const { name, schoolName, schoolCode, designation, phone, address, about } = req.body;
+    const { email } = req.params;
 
     // Find the staff by email address
-    Student.findOne({ email: staffEmail })
-        .then((staff) => {
-            if (!staff) {
+    Students.findOne({ email })
+        .then((student) => {
+            if (!student) {
                 return res.status(404).json({ error: 'staff not found' });
             }
 
             // Update the staff fields if provided
-            if (name) Student.name = name;
-            if (schoolName) Student.schoolName = schoolName;
-            if (schoolCode) Student.schoolCode = schoolCode;
-            if (designation) Student.designation = designation;
-            if (phone) Student.phone = phone;
-            if (email) Student.email = email;
-            if (address) Student.address = address;
-            if (about) Student.about = about;
+            if (name) Students.name = name;
+            if (schoolName) Students.schoolName = schoolName;
+            if (schoolCode) Students.schoolCode = schoolCode;
+            if (designation) Students.designation = designation;
+            if (phone) Students.phone = phone;
+            if (email) Students.email = email;
+            if (address) Students.address = address;
+            if (about) Students.about = about;
 
             // Save the updated staff
-            Student.save()
-                .then((updatedStaff) => {
-                    res.json(updatedStaff); // Respond with the updated staff
+            Students.save()
+                .then((updatedStudent) => {
+                    res.json(updatedStudent); // Respond with the updated staff
                 })
                 .catch((error) => {
-                    console.error('Error updating staff:', error);
+                    console.error('Error updating student:', error);
                     res.status(500).json({ error: 'Internal server error' });
                 });
         })
         .catch((error) => {
-            console.error('Error finding staff:', error);
+            console.error('Error finding student:', error);
             res.status(500).json({ error: 'Internal server error' });
         });
 });
 
 
 
-// //get the value according to the email address
-// router.get('/:schoolCode', (req, res) => {
-//     const { schoolCode } = req.params; // Get schoolCode from route parameter
-//     const { date } = req.query; // Get date from query parameter
-//     console.log(schoolCode, date);
-//     Student.find({ schoolCode, date }) // Use find to retrieve students with the given schoolCode and date
-//         .then((students) => {
-//             if (!students || students.length === 0) {
-//                 return res.status(404).json({ error: 'Students not found' });
-//             }
-//             res.json(students);
-//         })
-//         .catch((error) => {
-//             console.error('Error fetching student data:', error);
-//             res.status(500).json({ error: 'Internal server error' });
-//         });
-// });
+
 router.get('/student/:schoolCode', async (req, res) => {
     const { schoolCode } = req.params; // Get schoolCode from route parameter
     const { email, year } = req.query; // Get email and year from query parameters
@@ -117,7 +83,7 @@ router.get('/student/:schoolCode', async (req, res) => {
 
         // Here, you can use the query object to fetch the relevant student data
         // For example, querying your database using Mongoose
-        const students = await Student.find(query);
+        const students = await Students.find(query);
 
         console.log(students)
         if (!students || students.length === 0) {
@@ -140,7 +106,7 @@ router.get('/:schoolCode', (req, res) => {
     // For example, querying your database using Mongoose
 
 
-    Student.find({ schoolCode, year })
+    Students.find({ schoolCode, year })
         .then((students) => {
             if (!students || students.length === 0) {
                 return res.status(404).json({ error: 'Students not found' });
@@ -157,7 +123,7 @@ router.get('/details/:studentId', (req, res) => {
     const { studentId } = req.params; // Get studentId from route parameter
     const { schoolCode } = req.query; // Get schoolCode from query parameter
     console.log(studentId, schoolCode)
-    Student.find({ studentId, schoolCode })
+    Students.find({ studentId, schoolCode })
         .then((students) => {
             if (!students || students.length === 0) {
                 return res.status(404).json({ error: 'Students not found' });
@@ -171,49 +137,12 @@ router.get('/details/:studentId', (req, res) => {
 });
 
 
-// Get all school
-// router.get('/', verifyToken, (req, res) => {
-// router.get('/:id', (req, res) => {
-//     const studentId = req.params.id;
-
-//     Student.findById(studentId)
-//         .then((student) => {
-//             if (!student) {
-//                 return res.status(404).json({ error: 'Student not found' });
-//             }
-//             res.json(student);
-//         })
-//         .catch((error) => {
-//             res.status(500).json({ error: 'An error occurred' });
-//         });
-// });
-
-
-
-//get the value according to the email address
-// router.get('/', (req, res) => {
-//     const { email } = req.query;
-
-//     Student.findOne({ email })
-//         .then((staff) => {
-//             if (!staff) {
-//                 return res.status(404).json({ error: 'staff not found' });
-//             }
-//             res.json(staff);
-//         })
-//         .catch((error) => {
-//             console.error('Error fetching staff data:', error);
-//             res.status(500).json({ error: 'Internal server error' });
-//         });
-// });
-
-
 
 // Update a staff by ID
 router.put('/:id', (req, res) => {
     const { admitCard } = req.body;
     const { id } = req.params;
-    Student.findById(id)
+    Students.findById(id)
         .then((student) => {
             if (!student) {
                 return res.status(404).json({ error: 'Student not found' });
@@ -247,7 +176,7 @@ router.delete('/:id', async (req, res) => {
 
     try {
         // Find the student by ID and delete it
-        const deletedStudent = await Student.findByIdAndDelete(id);
+        const deletedStudent = await Students.findByIdAndDelete(id);
 
         if (!deletedStudent) {
             // If no student with the given ID is found, return a 404 response
@@ -269,7 +198,7 @@ router.put('/update/:id', async (req, res) => {
         const updatedData = req.body;
         console.log(studentId, updatedData)
         // Find the student by ID and update their information
-        const updatedStudent = await Student.findByIdAndUpdate(studentId, updatedData, {
+        const updatedStudent = await Students.findByIdAndUpdate(studentId, updatedData, {
             new: true, // Return the updated document
         });
 

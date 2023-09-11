@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Student = require('../models/student');
+const Student = require('../models/students');
 const jwt = require('jsonwebtoken');
 const Applications = require('../models/application');
 
