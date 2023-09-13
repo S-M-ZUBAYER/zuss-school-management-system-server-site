@@ -9,6 +9,11 @@ const PayFeesSchema = new mongoose.Schema({
     SectionName: String,
     ShiftName: String,
     ClassRoll: String,
+    proposalAmount: Number,
+    selectedPayments: Array,
+    paymentMethod: String,
+    agentNumber: String,
+    transactionId: String,
     PaidAmount: Number,
     unpaidAmount: Number,
     status: Array

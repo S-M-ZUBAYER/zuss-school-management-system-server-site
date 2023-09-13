@@ -8,8 +8,8 @@ const PayFees = require('../models/PayFee');
 
 // Add new staff
 router.post('/', (req, res) => {
-    const { teacherStatus, studentId, schoolCode, Name, ClassName, SectionName, ShiftName, ClassRoll, PaidAmount, unpaidAmount, status } = req.body;
-    const payFees = new PayFees({ teacherStatus, studentId, schoolCode, Name, ClassName, SectionName, ShiftName, ClassRoll, PaidAmount, unpaidAmount, status });
+    const { teacherStatus, studentId, schoolCode, Name, ClassName, SectionName, ShiftName, ClassRoll, proposalAmount, selectedPayments, paymentMethod, agentNumber, transactionId, PaidAmount, unpaidAmount, status } = req.body;
+    const payFees = new PayFees({ teacherStatus, studentId, schoolCode, Name, ClassName, SectionName, ShiftName, ClassRoll, proposalAmount, selectedPayments, paymentMethod, agentNumber, transactionId, PaidAmount, unpaidAmount, status });
 
     payFees.save()
         .then(() => {
@@ -21,6 +21,86 @@ router.post('/', (req, res) => {
 });
 
 
+router.put('/updateStatus/:id', async (req, res) => {
+    const { id } = req.params;
+    const teacherStatus = false;
+
+    try {
+        // Find the payment status document by ID and update the teacherStatus
+        const updatedStatus = await PayFees.findByIdAndUpdate(
+            id,
+            { teacherStatus },
+            { new: true } // Return the updated document
+        );
+
+        if (!updatedStatus) {
+            return res.status(404).json({ error: 'Payment status not found' });
+        }
+
+        res.json(updatedStatus);
+    } catch (error) {
+        console.error('Error updating teacher status:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+
+// Update teacher status and selected payments by ID
+router.put('/updateRejectStatus/:id', async (req, res) => {
+    const { id } = req.params;
+    const { teacherStatus, selectedPayments } = req.body;
+    console.log(teacherStatus, selectedPayments)
+    try {
+        // Find the payment status document by ID and update the teacherStatus and selected payments
+        const updatedStatus = await PayFees.findByIdAndUpdate(
+            id,
+            { teacherStatus },
+            { new: true } // Return the updated document
+        );
+
+        if (!updatedStatus) {
+            return res.status(404).json({ error: 'Payment status not found' });
+        }
+
+        // // Update selected payments
+        // updatedStatus.status.forEach((payment) => {
+        //     if (selectedPayments.includes(payment.purpose)) {
+        //         payment.paid = false;
+        //         console.log(payment)
+        //     }
+        // });
+
+        // // Update paidAmount and unpaidAmount
+        // updatedStatus.PaidAmount -= updatedStatus.proposalAmount;
+        // updatedStatus.unpaidAmount += updatedStatus.proposalAmount;
+        // updatedStatus.proposalAmount = 0;
+
+        // // Save the updated payment status
+        // await updatedStatus.save();
+
+        const updatedPayments = updatedStatus.status.map((payment) => {
+            if (selectedPayments.includes(payment.purpose)) {
+                return { ...payment, paid: false };
+            }
+            return payment;
+        });
+
+        // Update paidAmount and unpaidAmount
+        const totalPaid = updatedPayments.filter((payment) => payment.paid).reduce((acc, payment) => acc + parseFloat(payment.amount), 0);
+        const totalUnpaid = updatedPayments.filter((payment) => !payment.paid).reduce((acc, payment) => acc + parseFloat(payment.amount), 0);
+
+        updatedStatus.status = updatedPayments;
+        updatedStatus.PaidAmount = totalPaid;
+        updatedStatus.unpaidAmount = totalUnpaid;
+
+        await updatedStatus.save();
+
+        res.json(updatedStatus);
+    } catch (error) {
+        console.error('Error updating teacher status and payments:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
 
 // Update a staff by email address
 router.patch('/:email', (req, res) => {
