@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const PayFeesSchema = new mongoose.Schema({
     teacherStatus: Boolean,
     studentId: String,
+    schoolCode: String,
     Name: String,
     ClassName: String,
     SectionName: String,

@@ -8,8 +8,8 @@ const PayFees = require('../models/PayFee');
 
 // Add new staff
 router.post('/', (req, res) => {
-    const { teacherStatus, studentId, Name, ClassName, SectionName, ShiftName, ClassRoll, PaidAmount, unpaidAmount, status } = req.body;
-    const payFees = new PayFees({ teacherStatus, studentId, Name, ClassName, SectionName, ShiftName, ClassRoll, PaidAmount, unpaidAmount, status });
+    const { teacherStatus, studentId, schoolCode, Name, ClassName, SectionName, ShiftName, ClassRoll, PaidAmount, unpaidAmount, status } = req.body;
+    const payFees = new PayFees({ teacherStatus, studentId, schoolCode, Name, ClassName, SectionName, ShiftName, ClassRoll, PaidAmount, unpaidAmount, status });
 
     payFees.save()
         .then(() => {
@@ -120,19 +120,43 @@ router.put('/:id', (req, res) => {
 
 
 // Define the route to fetch notice data by school code
-router.get('/:schoolCode', (req, res) => {
-    const { schoolCode } = req.params;
+router.get('/payStatus/:schoolCode', async (req, res) => {
+    try {
+        const { schoolCode } = req.params; // Get schoolCode from route parameter
+        const { studentId } = req.query; // Get studentId from query parameter
 
-    // Use the notice model to find the notices by school code
-    Staffs.find({ schoolCode })
-        .then((staffs) => {
-            res.json(staffs);
+        // Find payment status documents with the given schoolCode and studentId
+        const paymentStatus = await PayFees.find({ schoolCode, studentId });
 
-        })
-        .catch((error) => {
-            console.error('Error fetching staffs data:', error);
-            res.status(500).json({ error: 'Internal server error' });
-        });
+        if (!paymentStatus || paymentStatus.length === 0) {
+            return res.status(404).json({ error: 'Payment status not found' });
+        }
+
+        res.json(paymentStatus);
+    } catch (error) {
+        console.error('Error fetching payment status data:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+
+router.get('/teacherPayStatus/:schoolCode', async (req, res) => {
+    try {
+        const { schoolCode } = req.params; // Get schoolCode from route parameter
+        const teacherStatus = true; // Get studentId from query parameter
+
+        // Find payment status documents with the given schoolCode and studentId
+        const paymentStatus = await PayFees.find({ schoolCode, teacherStatus });
+
+        if (!paymentStatus || paymentStatus.length === 0) {
+            return res.status(404).json({ error: 'Payment status not found' });
+        }
+
+        res.json(paymentStatus);
+    } catch (error) {
+        console.error('Error fetching payment status data:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
 });
 
 //get the value according to the email address
@@ -152,23 +176,22 @@ router.get('/:schoolCode/:email', (req, res) => {
 
 
 
-// Delete a staff by ID
-router.delete('/:id', (req, res) => {
-    const { id } = req.params;
+router.delete('/payStatus/:id', async (req, res) => {
+    try {
+        const paymentStatus = await PayFees.findById(req.params.id);
 
-    // Find the staff by ID and delete it
-    Staff.findByIdAndDelete(id)
-        .then((staff) => {
-            if (!staff) {
-                return res.status(404).json({ error: 'Staff not found' });
-            }
+        if (!paymentStatus) {
+            return res.status(404).json({ error: 'Payment status not found' });
+        }
 
-            res.json({ message: 'Staff deleted successfully' });
-        })
-        .catch((error) => {
-            console.error('Error deleting staff:', error);
-            res.status(500).json({ error: 'Internal server error' });
-        });
+        // Perform the deletion using deleteOne
+        await PayFees.deleteOne({ _id: req.params.id });
+
+        res.json({ message: 'Payment status deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting payment status:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
 });
 
 

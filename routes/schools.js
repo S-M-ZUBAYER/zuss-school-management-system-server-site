@@ -87,6 +87,25 @@ router.get('/school/:schoolCode', (req, res) => {
             res.status(500).json({ error: 'Internal server error' });
         });
 });
+router.get('/url/:schoolName', (req, res) => {
+    const { schoolName } = req.params;
+
+    const name = schoolName
+    // Use the School model to find the school by school code
+    School.findOne({ name })
+        .then(school => {
+            if (!school) {
+                return res.status(404).json({ error: 'School not found' });
+            }
+
+            // Return the school data as JSON response
+            res.json(school);
+        })
+        .catch(error => {
+            console.error('Error fetching school data:', error);
+            res.status(500).json({ error: 'Internal server error' });
+        });
+});
 
 
 
