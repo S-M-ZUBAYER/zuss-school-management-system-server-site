@@ -6,9 +6,8 @@ const jwt = require('jsonwebtoken');
 
 // Create a new Attendance
 router.post('/', (req, res) => {
-    const { schoolName, schoolCode, ClassName, sectionName, shiftName, year, term, allSubjects } = req.body;
-    const termSubject = new TermSubject({ schoolName, schoolCode, ClassName, sectionName, shiftName, year, term, allSubjects });
-
+    const { schoolName, schoolCode, className, sectionName, shiftName, year, term, allSubjects } = req.body;
+    const termSubject = new TermSubject({ schoolName, schoolCode, className, sectionName, shiftName, year, term, allSubjects });
     termSubject.save()
         .then(() => {
             res.status(201).json(termSubject);
@@ -20,16 +19,7 @@ router.post('/', (req, res) => {
 });
 
 // Get all Attendance
-// router.get('/', verifyToken, (req, res) => {
-router.get('/', (req, res) => {
-    StdPayment.find()
-        .then((stdPayments) => {
-            res.json(stdPayments);
-        })
-        .catch((error) => {
-            res.status(500).json({ error: 'An error occurred' });
-        });
-});
+
 
 
 router.get('/:schoolCode', (req, res) => {

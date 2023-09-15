@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const termSubjectSchema = new mongoose.Schema({
     schoolName: String,
     schoolCode: String,
-    ClassName: String,
+    className: String,
     sectionName: String,
     shiftName: String,
     year: String,
