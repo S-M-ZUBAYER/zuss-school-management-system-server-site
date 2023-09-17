@@ -7,7 +7,7 @@ const AddUpdateResult = require('../models/AddUpdateResult');
 router.patch('/:studentId/:year/:schoolCode/:term', async (req, res) => {
 
     const { studentId, year, schoolCode, term } = req.params;
-    const { studentName, email, className, sectionName, shiftName, classRoll, subjectMarks, termAverage, termGrade } = req.body;
+    const { studentName, email, className, sectionName, shiftName, classRoll, subjectMarks, allSubjects, termAverage, termGrade } = req.body;
     console.log(studentId, year, schoolCode, term)
     try {
         // Find the student result by studentId, year, and schoolCode, and update it
@@ -22,6 +22,7 @@ router.patch('/:studentId/:year/:schoolCode/:term', async (req, res) => {
                 classRoll,
                 term,
                 subjectMarks,
+                allSubjects,
                 termAverage,
                 termGrade,
             },
@@ -61,21 +62,7 @@ router.get('/:schoolCode', (req, res) => {
         });
 });
 
-// // router.get('/:id', verifyToken, (req, res) => {
-// router.get('/:id', (req, res) => {
-//     const { id } = req.params;
 
-//     Attendance.findById(id)
-//         .then((attendances) => {
-//             if (!attendances) {
-//                 return res.status(404).json({ error: 'Attendance not found' });
-//             }
-//             res.json(attendances);
-//         })
-//         .catch((error) => {
-//             res.status(500).json({ error: 'An error occurred' });
-//         });
-// });
 
 
 

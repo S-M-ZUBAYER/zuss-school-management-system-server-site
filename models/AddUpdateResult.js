@@ -19,6 +19,7 @@ const AddUpdateResultSchema = new mongoose.Schema({
             outOf: Number,
         },
     ],
+    allSubjects: Array,
     termAverage: Number,
     termGrade: String,
 });

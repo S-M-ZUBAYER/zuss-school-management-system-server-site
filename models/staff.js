@@ -6,6 +6,7 @@ const staffSchema = new mongoose.Schema({
     schoolName: String,
     schoolCode: String,
     designation: String,
+    selectedStatus: String,
     phone: String,
     email: String,
     image: String,

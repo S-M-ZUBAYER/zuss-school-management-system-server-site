@@ -26,9 +26,9 @@ const verifyToken = (req, res, next) => {
 
 // Add new staff
 router.post('/', (req, res) => {
-    const { teacherId, name, schoolName, schoolCode, designation, phone, email, image, bloodGroup, district, division, address, about } = req.body;
-    const staff = new Staff({ teacherId, name, schoolName, schoolCode, designation, phone, email, image, bloodGroup, district, division, address, about });
-
+    const { teacherId, name, schoolName, schoolCode, designation, selectedStatus, phone, email, image, bloodGroup, district, division, address, about } = req.body;
+    const staff = new Staff({ teacherId, name, schoolName, schoolCode, designation, selectedStatus, phone, email, image, bloodGroup, district, division, address, about });
+    console.log(teacherId, name, schoolName, schoolCode, designation, selectedStatus, phone, email, image, bloodGroup, district, division, address, about)
     staff.save()
         .then(() => {
             res.status(201).json(staff);
@@ -42,7 +42,7 @@ router.post('/', (req, res) => {
 
 // Update a staff by email address
 router.patch('/:email', (req, res) => {
-    const { name, schoolName, schoolCode, designation, phone, email, address, about } = req.body;
+    const { name, schoolName, schoolCode, designation, selectedStatus, phone, email, address, about } = req.body;
     const { email: staffEmail } = req.params;
 
     // Find the staff by email address
@@ -57,6 +57,7 @@ router.patch('/:email', (req, res) => {
             if (schoolName) staff.schoolName = schoolName;
             if (schoolCode) staff.schoolCode = schoolCode;
             if (designation) staff.designation = designation;
+            if (designation) staff.selectedStatus = selectedStatus;
             if (phone) staff.phone = phone;
             if (email) staff.email = email;
             if (district) staff.district = district;
@@ -85,7 +86,7 @@ router.patch('/:email', (req, res) => {
 
 // Update a staff by ID
 router.put('/:id', (req, res) => {
-    const { name, schoolName, schoolCode, designation, phone, email, address, about } = req.body;
+    const { name, schoolName, schoolCode, designation, selectedStatus, phone, email, address, about } = req.body;
     const { id } = req.params;
 
     // Find the staff by ID
@@ -100,6 +101,7 @@ router.put('/:id', (req, res) => {
             if (schoolName) staff.schoolName = schoolName;
             if (schoolCode) staff.schoolCode = schoolCode;
             if (designation) staff.designation = designation;
+            if (designation) staff.selectedStatus = selectedStatus;
             if (phone) staff.phone = phone;
             if (email) staff.email = email;
             if (district) staff.district = district;
