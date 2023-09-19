@@ -22,18 +22,43 @@ const verifyToken = (req, res, next) => {
 };
 
 // Create a new class
-router.post('/', (req, res) => {
+// router.post('/', (req, res) => {
+
+//     const { schoolName, schoolCode, classInfo } = req.body;
+//     const classes = new Class({ schoolName, schoolCode, classInfo });
+
+//     classes.save()
+//         .then(() => {
+//             res.status(201).json(classes);
+//         })
+//         .catch((error) => {
+//             res.status(500).json({ error: 'An error occurred' });
+//         });
+// });
+
+router.patch('/:schoolCode', async (req, res) => {
 
     const { schoolName, schoolCode, classInfo } = req.body;
-    const classes = new Class({ schoolName, schoolCode, classInfo });
+    try {
+        // Find the student result by studentId, year, and schoolCode, and update it
+        const updatedClass = await Class.findOneAndUpdate(
+            { schoolCode }, // This is the query to find the document
+            {
+                schoolName,
+                schoolCode,
+                classInfo
+            },
+            { new: true, upsert: true }
+        );
 
-    classes.save()
-        .then(() => {
-            res.status(201).json(classes);
-        })
-        .catch((error) => {
-            res.status(500).json({ error: 'An error occurred' });
-        });
+        if (!updatedClass) {
+            return res.status(404).json({ error: 'School not found' });
+        }
+
+        res.json(updatedClass);
+    } catch (error) {
+        res.status(500).json({ error: 'An error occurred while updating school Class List' });
+    }
 });
 
 // Get all class
