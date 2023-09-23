@@ -36,6 +36,7 @@ const TcrAtdTimeRoutes = require('./routes/teacherAtdSetTime')
 const AddUpdateResultRoutes = require('./routes/AddUpdateResult')
 const SliderImgsRoutes = require('./routes/SliderImgs')
 const NoticeLinerRoutes = require('./routes/NoticeLiner')
+const PaymentNumbersRoutes = require('./routes/PaymentNumbers')
 
 
 
@@ -82,6 +83,7 @@ app.use('/api/teacherSetTime', TcrAtdTimeRoutes);
 app.use('/api/AddUpdateResultRoutes', AddUpdateResultRoutes);
 app.use('/api/SliderImgs', SliderImgsRoutes);
 app.use('/api/NoticeLiner', NoticeLinerRoutes);
+app.use('/api/PaymentNumbers', PaymentNumbersRoutes);
 
 app.get('/', (req, res) => {
     res.send({ message: "Welcome to Zuss school management system server site" })
