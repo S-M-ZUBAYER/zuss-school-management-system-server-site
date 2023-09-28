@@ -6,6 +6,9 @@ const schoolUserSchema = new mongoose.Schema({
     schoolName: String,
     schoolCode: String,
     email: String,
+    teacher: Boolean,
+    admin: Boolean,
+    mainAdmin: Boolean
 });
 
 const SchoolUsers = mongoose.model('SchoolUsers', schoolUserSchema);

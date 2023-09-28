@@ -38,6 +38,53 @@ router.post('/add', (req, res) => {
 });
 
 
+// Create a new user
+router.post('/teacher/add', (req, res) => {
+
+    const { name, image, schoolName, schoolCode, email } = req.body;
+    const users = new SchoolUsers({ name, image, schoolName, schoolCode, email, teacher: true });
+
+    users.save() // Call the save() method on the users object, not on the SchoolUsers model
+        .then(() => {
+            res.status(201).json(users);
+        })
+        .catch((error) => {
+            res.status(500).json({ error: 'An error occurred' });
+        });
+});
+
+
+// Create a new user
+router.post('/admin/add', (req, res) => {
+
+    const { name, image, schoolName, schoolCode, email } = req.body;
+    const users = new SchoolUsers({ name, image, schoolName, schoolCode, email, teacher: true, admin: true });
+
+    users.save() // Call the save() method on the users object, not on the SchoolUsers model
+        .then(() => {
+            res.status(201).json(users);
+        })
+        .catch((error) => {
+            res.status(500).json({ error: 'An error occurred' });
+        });
+});
+
+
+// Create a new user
+router.post('/mainAdmin/add', (req, res) => {
+    const { name, image, schoolName, schoolCode, email } = req.body;
+    const users = new SchoolUsers({ name, image, schoolName, schoolCode, email, teacher: true, admin: true, mainAdmin: true });
+
+    users.save() // Call the save() method on the users object, not on the SchoolUsers model
+        .then(() => {
+            res.status(201).json(users);
+        })
+        .catch((error) => {
+            res.status(500).json({ error: 'An error occurred' });
+        });
+});
+
+
 
 // Get all class
 // router.get('/', verifyToken, (req, res) => {
