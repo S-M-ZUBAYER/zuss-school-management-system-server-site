@@ -20,40 +20,57 @@ const verifyToken = (req, res, next) => {
         next();
     });
 };
-
-router.patch('/update/:schoolCode', (req, res) => {
+router.patch('/update/:schoolCode', async (req, res) => {
     const { schoolCode } = req.params;
-    const { admissionInfo } = req.body;
+    const { admissionNotice, requirement, feeType, applicationFee } = req.body;
 
-    Admission.findOneAndUpdate(
-        { schoolCode },
-        { admissionInfo },
-        { new: true, upsert: true }
-    )
-        .then((admission) => {
-            if (admission) {
-                return res.status(404).json({ error: 'Admission not found' });
-            }
-            res.json(admission);
-        })
-        .catch((error) => {
-            res.status(500).json({ error: 'An error occurred' });
-        });
+    try {
+        // Find the school by schoolCode
+        let admission = await Admission.findOne({ schoolCode });
+
+        if (!admission) {
+            // If admission info doesn't exist, create a new document
+            admission = new Admission({
+                schoolCode,
+                admissionInfo: {
+                    admissionNotice,
+                    requirement,
+                    feeType,
+                    applicationFee,
+                },
+            });
+
+            await admission.save();
+            return res.status(201).json(admission);
+        }
+
+        // Update the admissionInfo field of the school
+        admission.admissionInfo = {
+            admissionNotice,
+            requirement,
+            feeType,
+            applicationFee,
+        };
+
+        // Save the updated school document
+        const updatedAdmission = await admission.save();
+
+        return res.json(updatedAdmission);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: 'An error occurred' });
+    }
 });
 
 
 
-router.post('/', (req, res) => {
-    const { schoolName, schoolCode, admissionInfo } = req.body;
-    const admission = new Admission({ schoolName, schoolCode, admissionInfo });
-    admission.save()
-        .then(() => {
-            res.status(201).json(admission);
-        })
-        .catch((error) => {
-            res.status(500).json({ error: 'An error occurred' });
-        });
-});
+
+
+
+
+
+
+
 
 
 
