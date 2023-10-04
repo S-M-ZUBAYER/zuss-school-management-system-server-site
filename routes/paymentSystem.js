@@ -101,17 +101,33 @@ router.get('/:id', (req, res) => {
 router.put('/:id', (req, res) => {
     const { id } = req.params;
 
-    Attendance.findByIdAndUpdate(id, req.body, { new: true })
-        .then((attendances) => {
-            if (!attendances) {
-                return res.status(404).json({ error: 'Attendance not found' });
+    // Extract only the fields you want to update from req.body
+    const { totalAmount, allFees } = req.body;
+
+    // Create an object to hold the updated fields
+    const updatedFields = {};
+
+    if (totalAmount !== undefined) {
+        updatedFields.totalAmount = totalAmount;
+    }
+
+    if (allFees !== undefined) {
+        updatedFields.allFees = allFees;
+    }
+
+    // Use findByIdAndUpdate to update the document
+    StdPayment.findByIdAndUpdate(id, updatedFields, { new: true })
+        .then((payment) => {
+            if (!payment) {
+                return res.status(404).json({ error: 'payment not found' });
             }
-            res.json(attendances);
+            res.json(payment);
         })
         .catch((error) => {
             res.status(500).json({ error: 'An error occurred' });
         });
 });
+
 
 // Delete a Attendance
 // router.delete('/:id', verifyToken, (req, res) => {
@@ -119,12 +135,12 @@ router.delete('/:id', (req, res) => {
     const { id } = req.params;
     // const { id }
 
-    Attendance.findByIdAndRemove(id)
-        .then((attendances) => {
-            if (!attendances) {
-                return res.status(404).json({ error: 'Attendance not found' });
+    StdPayment.findByIdAndRemove(id)
+        .then((stdPayment) => {
+            if (!stdPayment) {
+                return res.status(404).json({ error: 'stdPayment not found' });
             }
-            res.json({ message: 'Attendance deleted successfully' });
+            res.json({ message: 'stdPayment deleted successfully' });
         })
         .catch((error) => {
             res.status(500).json({ error: 'An error occurred' });

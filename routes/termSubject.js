@@ -62,12 +62,27 @@ router.get('/:id', (req, res) => {
 router.put('/:id', (req, res) => {
     const { id } = req.params;
 
-    Attendance.findByIdAndUpdate(id, req.body, { new: true })
-        .then((attendances) => {
-            if (!attendances) {
-                return res.status(404).json({ error: 'Attendance not found' });
+    // Extract only the fields you want to update from req.body
+    const { term, allSubjects } = req.body;
+
+    // Create an object to hold the updated fields
+    const updatedFields = {};
+
+    if (term !== undefined) {
+        updatedFields.term = term;
+    }
+
+    if (allSubjects !== undefined) {
+        updatedFields.allSubjects = allSubjects;
+    }
+
+    // Use findByIdAndUpdate to update the document
+    TermSubject.findByIdAndUpdate(id, updatedFields, { new: true })
+        .then((termSubject) => {
+            if (!termSubject) {
+                return res.status(404).json({ error: 'TermSubject not found' });
             }
-            res.json(attendances);
+            res.json(termSubject);
         })
         .catch((error) => {
             res.status(500).json({ error: 'An error occurred' });
@@ -80,12 +95,12 @@ router.delete('/:id', (req, res) => {
     const { id } = req.params;
     // const { id }
 
-    Attendance.findByIdAndRemove(id)
-        .then((attendances) => {
-            if (!attendances) {
-                return res.status(404).json({ error: 'Attendance not found' });
+    TermSubject.findByIdAndRemove(id)
+        .then((termSubject) => {
+            if (!termSubject) {
+                return res.status(404).json({ error: 'termSubject not found' });
             }
-            res.json({ message: 'Attendance deleted successfully' });
+            res.json({ message: 'termSubject deleted successfully' });
         })
         .catch((error) => {
             res.status(500).json({ error: 'An error occurred' });
