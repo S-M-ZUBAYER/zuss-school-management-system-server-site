@@ -104,7 +104,7 @@ app.listen(port, () => {
 
 
 // Connect to MongoDB
-mongoose.connect('mongodb+srv://KidSpaceDBUser:NdX2OYU7WNNoHo85@cluster0.p2sr91x.mongodb.net/?retryWrites=true&w=majority', {
+mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.p2sr91x.mongodb.net/?retryWrites=true&w=majority`, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 })
@@ -114,3 +114,17 @@ mongoose.connect('mongodb+srv://KidSpaceDBUser:NdX2OYU7WNNoHo85@cluster0.p2sr91x
     .catch((error) => {
         console.error('Error connecting to MongoDB', error);
     });
+
+
+
+// Connect to MongoDB
+// mongoose.connect('mongodb+srv://school-management-system:zQubUG*#w4dGeX@cluster0.6n51xnc.mongodb.net/', {
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true,
+// })
+//     .then(() => {
+//         console.log('Connected to MongoDB');
+//     })
+//     .catch((error) => {
+//         console.error('Error connecting to MongoDB', error);
+//     });
